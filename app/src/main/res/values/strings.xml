@@ -2,5 +2,9 @@
     <string name="app_name">HW2_M6_2</string>
     <string name="character_image">image</string>
     <string name="default_name">name</string>
-
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="character">character</string>
+    <string name="gender">Gender:</string>
+    <string name="last_known_location">Last known location:</string>
+    <string name="first_seen_in">First seen in:</string>
 </resources>

@@ -19,7 +19,7 @@ object NetworkService {
         .addInterceptor(interceptor)
         .build()
 
-    fun createLoggingInterceptor(): HttpLoggingInterceptor {
-        return HttpLoggingInterceptor().apply { level = Level.BODY }
-    }
+    fun createLoggingInterceptor(): HttpLoggingInterceptor =
+        HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
 }
+

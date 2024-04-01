@@ -15,20 +15,18 @@ import retrofit2.Retrofit
 object ApiModule {
 
     @Provides
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
-        return NetworkService.createRetrofit(okHttpClient)
-    }
+    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit =
+        NetworkService.createRetrofit(okHttpClient)
 
     @Provides
-    fun provideOkHttpClient(interceptor: HttpLoggingInterceptor): OkHttpClient {
-        return NetworkService.createOkHttpClient(interceptor)
-    }
-
+    fun provideOkHttpClient(interceptor: HttpLoggingInterceptor): OkHttpClient =
+        NetworkService.createOkHttpClient(interceptor)
 
     @Provides
-    fun provideInterceptor(): HttpLoggingInterceptor {
-        return NetworkService.createLoggingInterceptor()
-    }
+    fun provideInterceptor(): HttpLoggingInterceptor =
+        NetworkService.createLoggingInterceptor()
+
     @Provides
-    fun provideCartoonApiService(retrofit: Retrofit): CartoonApiService = retrofit.create(CartoonApiService::class.java)
+    fun provideCartoonApiService(retrofit: Retrofit): CartoonApiService =
+        retrofit.create(CartoonApiService::class.java)
 }
