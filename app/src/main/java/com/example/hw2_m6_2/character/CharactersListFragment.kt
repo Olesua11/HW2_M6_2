@@ -1,25 +1,21 @@
 package com.example.hw2_m6_2.character
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.viewModels
+import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.hw2_m6_2.databinding.FragmentCharactersListBinding
 import com.example.hw2_m6_2.di.Resource
-import dagger.hilt.android.AndroidEntryPoint
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-
-@AndroidEntryPoint
 class CharactersListFragment : Fragment() {
 
-    private val viewModel: CharacterViewModel by viewModels()
-
-    lateinit var charactersAdapter: CharacterAdapter
+    private val viewModel: CharacterViewModel by viewModel()
 
     private var _binding: FragmentCharactersListBinding? = null
     private val binding get() = _binding!!
@@ -32,52 +28,39 @@ class CharactersListFragment : Fragment() {
         return binding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        charactersAdapter = CharacterAdapter(this::onClicker)
-        setCharactersRV()
-        observe()
+        val charactersAdapter = CharacterAdapter(this::onClicker)
+        binding.characterRv.apply {
+            adapter = charactersAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+        }
+        observe(charactersAdapter)
     }
 
-
-
-    private fun setCharactersRV() = with(binding.characterRv) {
-        adapter = charactersAdapter
-        layoutManager = LinearLayoutManager(
-            requireContext(),
-            LinearLayoutManager.VERTICAL,
-            false
-        )
-    }
-
-    private fun observe() {
-        viewModel.giveCharacters().observe(viewLifecycleOwner) {
-            when (it) {
+    private fun observe(adapter: CharacterAdapter) {
+        viewModel.characters.observe(viewLifecycleOwner) { resource ->
+            when (resource) {
                 is Resource.Error -> {
-                    Toast.makeText(requireContext(), it.massage, Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), resource.massage, Toast.LENGTH_LONG).show()
                 }
-
                 is Resource.Loading -> {
-                    binding.animLoading.visibility = View.VISIBLE
+                    binding.animLoading.isVisible = true
                 }
-
                 is Resource.Success -> {
-                    charactersAdapter.submitList(it.data)
-
+                    adapter.submitList(resource.data)
+                    binding.animLoading.isVisible = false
                 }
-            }
-            if (it !is Resource.Loading) {
-                binding.animLoading.visibility = View.GONE
             }
         }
     }
 
-    private fun onClicker(character: String){
-        findNavController().navigate(CharactersListFragmentDirections.actionCharactersListFragmentToCharacterDetailFragment(character))
+    private fun onClicker(characterUrl: String) {
+        findNavController().navigate(CharactersListFragmentDirections.actionCharactersListFragmentToCharacterDetailFragment(characterUrl))
     }
-    override fun onDestroy() {
-        super.onDestroy()
+
+    override fun onDestroyView() {
+        super.onDestroyView()
         _binding = null
     }
 }

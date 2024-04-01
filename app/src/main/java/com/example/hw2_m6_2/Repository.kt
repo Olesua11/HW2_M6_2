@@ -14,10 +14,7 @@ import javax.inject.Inject
 class Repository @Inject constructor(
     private val api: CartoonApiService
 ) {
-    private val _characters = MutableLiveData<Resource<CharacterResponse>>()
-    val characters: LiveData<Resource<CharacterResponse>> get() = _characters
-
-    fun fetchCharacters(): MutableLiveData<Resource<List<Character>>> {
+    fun fetchCharacters(): LiveData<Resource<List<Character>>> {
         val data = MutableLiveData<Resource<List<Character>>>()
         data.postValue(Resource.Loading())
 
@@ -43,15 +40,13 @@ class Repository @Inject constructor(
     }
 
     fun getCharacter(id: Int): LiveData<Resource<Character>> {
-
         val characterLiveData = MutableLiveData<Resource<Character>>()
         characterLiveData.postValue(Resource.Loading())
 
         api.getCharacter(id).enqueue(object : Callback<Character> {
             override fun onResponse(call: Call<Character>, response: Response<Character>) {
                 if (response.isSuccessful && response.body() != null && response.code() in 200..300) {
-                    val character = response.body()!!
-                    characterLiveData.value = Resource.Success(character)
+                    characterLiveData.value = Resource.Success(response.body()!!)
                 } else {
                     val errorMessage = "Error getting character: ${response.code()}"
                     characterLiveData.value = Resource.Error(errorMessage)
@@ -68,15 +63,13 @@ class Repository @Inject constructor(
     }
 
     fun getCharacterUrl(url: String): LiveData<Resource<Character>> {
-
         val characterLiveData = MutableLiveData<Resource<Character>>()
         characterLiveData.postValue(Resource.Loading())
 
         api.getSingleCharacter(url).enqueue(object : Callback<Character> {
             override fun onResponse(call: Call<Character>, response: Response<Character>) {
                 if (response.isSuccessful && response.body() != null && response.code() in 200..300) {
-                    val character = response.body()!!
-                    characterLiveData.value = Resource.Success(character)
+                    characterLiveData.value = Resource.Success(response.body()!!)
                 } else {
                     val errorMessage = "Error getting character: ${response.code()}"
                     characterLiveData.value = Resource.Error(errorMessage)
@@ -91,6 +84,4 @@ class Repository @Inject constructor(
 
         return characterLiveData
     }
-
-
 }

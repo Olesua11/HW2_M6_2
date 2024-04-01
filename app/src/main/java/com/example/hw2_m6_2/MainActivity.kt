@@ -5,7 +5,6 @@ import android.os.Bundle
 import com.example.hw2_m6_2.databinding.ItemCharacterBinding
 import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

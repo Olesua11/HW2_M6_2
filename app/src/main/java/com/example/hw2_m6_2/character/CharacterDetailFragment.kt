@@ -1,24 +1,21 @@
 package com.example.hw2_m6_2.character
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.example.hw2_m6_2.R
 import com.example.hw2_m6_2.databinding.FragmentCharacterDetailBinding
 import com.example.hw2_m6_2.di.Resource
 import com.example.hw2_m6_2.di.loadImage
-import dagger.hilt.android.AndroidEntryPoint
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-@AndroidEntryPoint
 class CharacterDetailFragment : Fragment() {
 
-    private val viewModel: DetailsViewModel by viewModels()
+    private val viewModel: DetailsViewModel by viewModel()
 
     private var _binding: FragmentCharacterDetailBinding? = null
     private val binding get() = _binding!!
@@ -73,7 +70,6 @@ class CharacterDetailFragment : Fragment() {
                     Toast.makeText(requireContext(), result.massage, Toast.LENGTH_LONG).show()
                 }
             }
-
             if (result !is Resource.Loading) {
                 binding.appBarLayout.visibility = View.VISIBLE
                 binding.animLoading.visibility = View.GONE

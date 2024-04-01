@@ -1,20 +1,18 @@
 package com.example.hw2_m6_2.character
 
-import android.view.LayoutInflater
-import com.example.hw2_m6_2.data.Character
-import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
+import com.example.hw2_m6_2.data.Character
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.hw2_m6_2.R
 import com.example.hw2_m6_2.databinding.ItemCharacterBinding
 import com.example.hw2_m6_2.di.loadImage
 
-class CharacterAdapter constructor(
-    var onClick:(position: String) -> Unit
-) : ListAdapter<Character, CharacterAdapter.CharacterViewHolder>(
-    DIFF_UTIL_CALL_BACK
-) {
+class CharacterAdapter(
+    private val onClick: (String) -> Unit
+) : ListAdapter<Character, CharacterAdapter.CharacterViewHolder>(DIFF_UTIL_CALL_BACK) {
 
     companion object {
         private val DIFF_UTIL_CALL_BACK = object : DiffUtil.ItemCallback<Character>() {

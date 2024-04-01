@@ -1,9 +1,7 @@
 package com.example.hw2_m6_2.data
-
 import com.example.hw2_m6_2.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import okhttp3.logging.HttpLoggingInterceptor.Level
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
