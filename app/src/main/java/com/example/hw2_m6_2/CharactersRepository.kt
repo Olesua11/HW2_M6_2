@@ -1,5 +1,4 @@
 package com.example.hw2_m6_2
-
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
 import com.example.hw2_m6_2.data.CartoonApiService
@@ -13,7 +12,7 @@ class CharactersRepository(private val api: CartoonApiService) {
             when (resource) {
                 is Resource.Success -> Resource.Success(resource.data?.results ?: emptyList())
                 is Resource.Loading -> Resource.Loading()
-                is Resource.Error -> Resource.Error(resource.massage ?: "Uknown error")
+                is Resource.Error -> Resource.Error(resource.massage ?: " error")
             }
         }
 }
