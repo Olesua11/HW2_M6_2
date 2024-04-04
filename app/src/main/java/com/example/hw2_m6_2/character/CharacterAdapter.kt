@@ -10,9 +10,11 @@ import com.example.hw2_m6_2.R
 import com.example.hw2_m6_2.databinding.ItemCharacterBinding
 import com.example.hw2_m6_2.di.loadImage
 
-class CharacterAdapter(
-    private val onClick: (String) -> Unit
-) : ListAdapter<Character, CharacterAdapter.CharacterViewHolder>(DIFF_UTIL_CALL_BACK) {
+class CharacterAdapter (
+    var onClick:(position: String) -> Unit
+) : ListAdapter<Character, CharacterAdapter.CharacterViewHolder>(
+    DIFF_UTIL_CALL_BACK
+) {
 
     companion object {
         private val DIFF_UTIL_CALL_BACK = object : DiffUtil.ItemCallback<Character>() {

@@ -15,7 +15,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CharactersListFragment : Fragment() {
 
-    private val viewModel: CharacterViewModel by viewModel()
+    private val viewModel: CharactersViewModel by viewModel()
+
+    lateinit var charactersAdapter: CharacterAdapter
 
     private var _binding: FragmentCharactersListBinding? = null
     private val binding get() = _binding!!
@@ -28,39 +30,49 @@ class CharactersListFragment : Fragment() {
         return binding.root
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val charactersAdapter = CharacterAdapter(this::onClicker)
-        binding.characterRv.apply {
-            adapter = charactersAdapter
-            layoutManager = LinearLayoutManager(requireContext())
-        }
-        observe(charactersAdapter)
+        charactersAdapter = CharacterAdapter(this::onClicker)
+        setCharactersRV()
+        observe()
     }
 
-    private fun observe(adapter: CharacterAdapter) {
-        viewModel.characters.observe(viewLifecycleOwner) { resource ->
-            when (resource) {
+
+
+    private fun setCharactersRV() = with(binding.characterRv) {
+        adapter = charactersAdapter
+        layoutManager = LinearLayoutManager(
+            requireContext(),
+            LinearLayoutManager.VERTICAL,
+            false
+        )
+    }
+
+    private fun observe() {
+        viewModel.giveCharacters().observe(viewLifecycleOwner) {
+            when (it) {
                 is Resource.Error -> {
-                    Toast.makeText(requireContext(), resource.massage, Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), it.massage, Toast.LENGTH_LONG).show()
                 }
-                is Resource.Loading -> {
-                    binding.animLoading.isVisible = true
-                }
+
+                is Resource.Loading -> {}
+
                 is Resource.Success -> {
-                    adapter.submitList(resource.data)
-                    binding.animLoading.isVisible = false
+                    charactersAdapter.submitList(it.data)
+
                 }
             }
+            binding.animLoading.isVisible = it is Resource.Loading
         }
     }
 
-    private fun onClicker(characterUrl: String) {
-        findNavController().navigate(CharactersListFragmentDirections.actionCharactersListFragmentToCharacterDetailFragment(characterUrl))
+    private fun onClicker(character: String){
+        findNavController().navigate(CharactersListFragmentDirections.actionCharactersListFragmentToCharacterDetailFragment(character))
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onDestroy() {
+        super.onDestroy()
         _binding = null
     }
 }
