@@ -11,7 +11,7 @@ import com.example.hw2_m6_2.databinding.ItemCharacterBinding
 import com.example.hw2_m6_2.di.loadImage
 
 class CharacterAdapter (
-    var onClick:(position: String) -> Unit
+    var onClick:(position: Int) -> Unit
 ) : ListAdapter<Character, CharacterAdapter.CharacterViewHolder>(
     DIFF_UTIL_CALL_BACK
 ) {
@@ -37,7 +37,7 @@ class CharacterAdapter (
         val character = getItem(position)
         holder.bind(character)
         holder.itemView.setOnClickListener {
-            onClick(character.url)
+            onClick(character.id)
         }
     }
 

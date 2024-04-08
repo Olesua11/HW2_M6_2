@@ -1,78 +1,47 @@
 package com.example.hw2_m6_2.character
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.hw2_m6_2.BaseFragment
 import com.example.hw2_m6_2.databinding.FragmentCharactersListBinding
 import com.example.hw2_m6_2.di.Resource
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class CharactersListFragment : Fragment() {
 
-    private val viewModel: CharactersViewModel by viewModel()
+class CharactersListFragment: BaseFragment<
+        FragmentCharactersListBinding, CharactersViewModel>(FragmentCharactersListBinding::inflate) {
 
-    lateinit var charactersAdapter: CharacterAdapter
+    override val viewModel: CharactersViewModel by viewModel()
+    private val charactersAdapter = CharacterAdapter(this::onClicker)
 
-    private var _binding: FragmentCharactersListBinding? = null
-    private val binding get() = _binding!!
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentCharactersListBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        charactersAdapter = CharacterAdapter(this::onClicker)
-        setCharactersRV()
-        observe()
-    }
-
-
-
-    private fun setCharactersRV() = with(binding.characterRv) {
-        adapter = charactersAdapter
-        layoutManager = LinearLayoutManager(
-            requireContext(),
-            LinearLayoutManager.VERTICAL,
-            false
-        )
-    }
-
-    private fun observe() {
-        viewModel.giveCharacters().observe(viewLifecycleOwner) {
-            when (it) {
-                is Resource.Error -> {
-                    Toast.makeText(requireContext(), it.massage, Toast.LENGTH_LONG).show()
-                }
-
-                is Resource.Loading -> {}
-
-                is Resource.Success -> {
-                    charactersAdapter.submitList(it.data)
-
-                }
-            }
-            binding.animLoading.isVisible = it is Resource.Loading
+    override fun setupViews() {
+        super.setupViews()
+        with(binding.characterRv) {
+            adapter = charactersAdapter
+            layoutManager = LinearLayoutManager(
+                requireContext(),
+                LinearLayoutManager.VERTICAL,
+                false
+            )
         }
     }
-
-    private fun onClicker(character: String){
-        findNavController().navigate(CharactersListFragmentDirections.actionCharactersListFragmentToCharacterDetailFragment(character))
+    override fun observe() {
+        super.observe()
+        viewModel.viewModelScope.launch {
+            viewModel.giveCharacters().stataHandler(
+                success = {
+                    charactersAdapter.submitList(it)
+                },
+                state = {
+                    binding.animLoading.isVisible = it is Resource.Loading
+                }
+            )
+        }
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
+    private fun onClicker(character: Int){
+        findNavController().navigate(CharactersListFragmentDirections.actionCharactersListFragmentToCharacterDetailFragment(character))
     }
 }

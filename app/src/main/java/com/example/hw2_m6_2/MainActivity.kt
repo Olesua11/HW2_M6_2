@@ -3,7 +3,6 @@ package com.example.hw2_m6_2
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.hw2_m6_2.databinding.ItemCharacterBinding
-import dagger.hilt.android.AndroidEntryPoint
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

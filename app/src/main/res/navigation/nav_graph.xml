@@ -23,7 +23,7 @@
         tools:layout="@layout/fragment_character_detail" >
         <argument
             android:name="character_id"
-            app:argType="string"/>
+            app:argType="integer"/>
 
     </fragment>
 

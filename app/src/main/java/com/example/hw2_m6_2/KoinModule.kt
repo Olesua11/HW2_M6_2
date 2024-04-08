@@ -32,9 +32,16 @@ val modules =
 
 fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit = NetworkService.createRetrofit(okHttpClient)
 
-fun provideOkHttpClient(interceptor: HttpLoggingInterceptor): OkHttpClient = NetworkService.createOkHttpClient(interceptor)
-
-fun provideInterceptor(): HttpLoggingInterceptor = NetworkService.createLoggingInterceptor()
+fun provideOkHttpClient(interceptor: HttpLoggingInterceptor): OkHttpClient {
+    val loggingLevel = HttpLoggingInterceptor.Level.BODY
+    return NetworkService.createOkHttpClient(loggingLevel)
+}
+fun provideInterceptor(): HttpLoggingInterceptor {
+    val loggingLevel = HttpLoggingInterceptor.Level.BODY
+    return HttpLoggingInterceptor().apply {
+        level = loggingLevel
+    }
+}
 
 fun provideCartoonApiService(retrofit: Retrofit): CartoonApiService = retrofit.create(
     CartoonApiService::class.java)

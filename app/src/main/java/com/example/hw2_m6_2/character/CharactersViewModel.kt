@@ -9,6 +9,6 @@ class CharactersViewModel (
     private val repository: CharactersRepository
 ): ViewModel() {
 
-    fun giveCharacters(): LiveData<Resource<List<Character>>> = repository.getCharacter()
+    suspend fun giveCharacters(): LiveData<Resource<List<Character>>> = repository.getCharacter()
 
 }
